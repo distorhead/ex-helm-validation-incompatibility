@@ -1,0 +1,20 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cleaning
+spec:
+  schedule: "32 1 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  activeDeadlineSeconds: 7200
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: main
+            image: ubuntu:18.04
+            command: [ "/bin/bash", "-lec", "for i in {1..5} ; do date ; sleep 1 ; done" ]
